@@ -1,10 +1,11 @@
 // @TODO: YOUR CODE HERE!
 
-const svgWidth = 1140;
+const svgWidth = 800;
 const svgHeight = 500;
 
 d3.select('#scatter') 
   .append('svg')
+    .classed('char', true)
     .attr('width', svgWidth)
     .attr('height', svgHeight);
 
@@ -47,16 +48,14 @@ const render = data => {
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
     
     const xAxis = d3.axisBottom(xScale);
-        // .tickFormat(**)
-        // .tickSize(**)
+     
     const yAxis = d3.axisLeft(yScale);
-    //   .tickSize(**)
 
     const xAxisG = g.append('g').call(xAxis)
         .attr('transform', `translate(0,${innerHeight})`);
 
     xAxisG.append('text')
-        .attr('class', 'axis-label')
+        .classed('axis-label', true)
         .attr('y', 50) 
         .attr('x', innerWidth / 2)
         .attr('fill', 'black')
@@ -65,7 +64,7 @@ const render = data => {
     const yAxisG = g.append('g').call(yAxis);
 
     yAxisG.append('text')
-        .attr('class', 'axis-label')
+        .classed('axis-label', true)
         .attr('y', -50) 
         .attr('x', -innerHeight / 2)
         .attr('fill', 'black')
@@ -76,10 +75,20 @@ const render = data => {
 
     g.selectAll('circle').data(data)
       .enter().append('circle')
+        .classed('stateCircle inactive', true)
         .attr('cy', d => yScale(yValue(d)))
         .attr('cx', d => xScale(xValue(d)))
-        .attr('r', circleRadius)
-        .text('hi');
+        .attr('r', circleRadius);
+
+    g.selectAll('.stateText').data(data)
+        .enter().append('text')
+        .classed('stateCircle', true)
+        .attr('y', d => yScale(yValue(d)) + 5)
+        .attr('x', d => xScale(xValue(d)) - 10)
+        .text(d => d.abbr)
+        .on('click', function(){
+            d3.select(this).classed('active', true)
+        })
 
 
     g.append('text')
